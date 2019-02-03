@@ -138,7 +138,7 @@ def main_loop():
         if GameState.is_firing:
             if config.enabled_ads_help:
                 if not GameState.ads_active and not ScriptState.ads_helping:
-                    keyboard.press_and_release(config.Keys.ads)
+                    keyboard.press_and_release(config.Keys.alternate_ads)
                     GameState.canted_active = True
                     ScriptState.ads_helping = True
                     GameState.ads_active = True
@@ -178,7 +178,7 @@ def main_loop():
                 ScriptState.ads_helping = False
                 GameState.ads_active = False
                 GameState.canted_active = False
-                keyboard.press_and_release(config.Keys.ads)
+                keyboard.press_and_release(config.Keys.alternate_ads)
             if ScriptState.lean_helping:
                 keyboard.release(config.Keys.lean_left)
                 keyboard.release(config.Keys.lean_right)

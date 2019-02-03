@@ -7,7 +7,7 @@ debug = False
 
 enabled_anti_recoil = True
 enabled_ads_help = True
-enabled_lean_help = True
+enabled_lean_help = False
 enabled_limit_fire_time = False
 
 main_loop_sleep_time = 0.01
@@ -66,9 +66,11 @@ class Keys(IntEnum):
     strafe_left      = 30  # a
     strafe_right     = 32  # d
 
-    ads              = 14  # backspace
     hold_breath      = 42  # left shift
     toggle_canted    = 59  # F1
+    alternate_ads    = 60  # F2
+    alternate_fire   = 61  # F1
+
 
     toggle_map       = 33  # f
     toggle_inventory = 15  # tab

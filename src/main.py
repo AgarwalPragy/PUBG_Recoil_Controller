@@ -11,6 +11,8 @@ import utils
 from enums import *
 
 
+# todo: add crosshair helper when not in ADS
+
 class GameState:
     active_weapon = Weapons.other
     canted_active = False
@@ -91,11 +93,11 @@ def poll_mouse(ts):
     if ts - ScriptState.last_mouse_poll_time < config.mouse_poll_time:
         return
     ScriptState.last_mouse_poll_time = ts
-
+    # todo: convert polls into hooks so that the wheelevent can be listened to (jumping/vaulting cancels ads)
     GameState.is_firing = (
             mouse.is_pressed('left') and
             GameState.screen == Screens.play and
-            (GameState.active_weapon == Weapons.primary)
+            (GameState.active_weapon in [Weapons.primary, Weapons.secondary])
     )
 
     if GameState.is_firing:
@@ -221,21 +223,25 @@ def toggle_map():
 def set_weapon_primary():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = Weapons.primary
+        cancel_ads()
 
 
 def set_weapon_secondary():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = Weapons.secondary
+        cancel_ads()
+
 
 
 def set_weapon_other():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = Weapons.other
+        cancel_ads()
 
 
 def toggle_ads():
     if utils.is_game_in_foreground() or config.debug:
-        if GameState.screen == Screens.play and GameState.active_weapon == Weapons.primary:
+        if GameState.screen == Screens.play and GameState.active_weapon in [Weapons.primary, Weapons.secondary]:
             GameState.ads_active = not GameState.ads_active
 
 

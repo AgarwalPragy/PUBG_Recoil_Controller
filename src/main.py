@@ -6,6 +6,9 @@ import mouse
 import keyboard
 import termcolor
 
+
+from crosshair.crosshair import Crosshair
+from crosshair.main import reload_crosshair
 import config
 import utils
 from enums import *
@@ -52,6 +55,7 @@ class ScriptState:
 
     last_mouse_poll_time = None
     last_keyboard_poll_time = None
+    cross = None
 
     @staticmethod
     def reset():
@@ -144,6 +148,7 @@ def main_loop():
                     GameState.canted_active = True
                     ScriptState.ads_helping = True
                     GameState.ads_active = True
+                    disable_crosshair()
                     keyboard.press_and_release(config.Keys.toggle_canted)
             if config.enabled_anti_recoil and (ts - GameState.fire_start_time) >= ScriptState.recoil_index * config.time_between_mouse_move:
                 zoom = Zoom.x1 if GameState.canted_active else GameState.primary_zoom
@@ -180,6 +185,7 @@ def main_loop():
                 ScriptState.ads_helping = False
                 GameState.ads_active = False
                 GameState.canted_active = False
+                enable_crosshair()
                 keyboard.press_and_release(config.Keys.alternate_ads)
             if ScriptState.lean_helping:
                 keyboard.release(config.Keys.lean_left)
@@ -197,6 +203,7 @@ def toggle_script():
 def reset_state():
     ScriptState.reset()
     GameState.reset()
+    cancel_ads()
 
 
 def rotate_primary_zoom():
@@ -243,11 +250,24 @@ def toggle_ads():
     if utils.is_game_in_foreground() or config.debug:
         if GameState.screen == Screens.play and GameState.active_weapon in [Weapons.primary, Weapons.secondary]:
             GameState.ads_active = not GameState.ads_active
+            if GameState.ads_active:
+                disable_crosshair()
+            else:
+                enable_crosshair()
 
 
 def cancel_ads():
     if utils.is_game_in_foreground() or config.debug:
         GameState.ads_active = False
+        enable_crosshair()
+
+
+def enable_crosshair() -> None:
+    ScriptState.cross = reload_crosshair(ScriptState.cross)
+
+
+def disable_crosshair() -> None:
+    ScriptState.cross.allow_draw = False
 
 
 if __name__ == '__main__':

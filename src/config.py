@@ -6,8 +6,18 @@ __all__ = ['mouse_poll_time', 'time_between_mouse_move', 'recoil_table', 'recoil
 debug = False
 
 enabled_anti_recoil = True
-enabled_ads_help = True
+enabled_ads_help = False
+# todo: ads helper really screws us over by turning on hip fire,
+#  or removing our ads, and the costs outweigh the benefits.
+#  It can be improved by detecting when we've been in ads
+#  for too long while moving or doing ads cancelling things.
 enabled_lean_help = False
+# todo: can be improved by detecting when an
+#  ads while previously active, and not changing the ads direction once set
+#  Currently, trying to get back to cover while firing while learning
+#  right, will cause the lean to shift to left which screws stuff up.
+
+
 enabled_limit_fire_time = False
 
 main_loop_sleep_time = 0.01
@@ -20,31 +30,68 @@ burst_time = 0.3
 
 max_info_lines = 3
 
-recoil_table = [
-    4, 5, 4, 5, 4, 4, 5, 4, 5, 4,
-    4, 5, 4, 5, 4, 4, 5, 4, 5, 4,
-    4, 5, 4, 5, 4, 4, 5, 4, 5, 4,
-    4, 5, 4, 5, 4, 4, 5, 4, 5, 4,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 7,
-    7, 7, 7, 7, 6, 6, 6, 6, 6, 6,
-    6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    7, 7, 7, 8, 8, 8, 8, 8, 8, 8,
-    8, 8, 8, 8, 8, 8, 9, 9, 8, 8,
-    9, 9, 9, 9, 9, 9, 9, 8, 8, 8,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-    9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-    9, 9,
+recoil_table = [  # optimized for m416
+    6, 6, 6, 6, 4,
+    3, 3, 3, 4, 4,
+    3, 3, 3, 4, 4,
+    3, 3, 4, 4, 4,
+    4, 4, 4, 5, 5,
+    5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5,  # 07 bullets
+
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,  # 14 bullets
+
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,  # 21 bullets
+
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,
+    5, 5, 5, 6, 6,  # 28 bullets
+
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,  # 35 bullets
+
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,
+    5, 5, 5, 5, 6,  # 40 bullets
+
 ]
 
 recoil_multipliers = {
     Zoom.x1: 1,
     Zoom.x2: 1.8,
-    Zoom.x3: 2.3,
-    Zoom.x4: 3.7,
-    Zoom.x6: 5.3,
+    Zoom.x3: 2.65,
+    Zoom.x4: 3.6,
+    Zoom.x6: 5.2,
     Zoom.xx: 1.4,
+    # todo: detect when out of breath and cancel the effect
+    #  can be done purely on timing with no screen reading
+
+    # todo: add logic for quick tapping
+    #  currently, the initial high recoil control
+    #  pulls the mouse down too much while tapping.
 }
 
 

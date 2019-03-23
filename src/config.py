@@ -68,7 +68,7 @@ recoil_table = [  # optimized for m416
 ]
 
 recoil_multipliers = {
-    Zoom.x1: 1,
+    Zoom.x1: 1.35,
     Zoom.x2: 1.8,
     Zoom.x3: 2.65,
     Zoom.x4: 3.6,

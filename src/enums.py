@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-__all__ = ['Screens', 'Weapons', 'Zoom', 'Movement']
+__all__ = ['Screens', 'Weapons', 'Zoom']
 
 
 class Screens(Enum):
@@ -22,8 +22,3 @@ class Zoom(Enum):
     x4 = 3
     x6 = 4
     xx = -1
-
-
-class Movement(Enum):
-    left = 0
-    right = 1

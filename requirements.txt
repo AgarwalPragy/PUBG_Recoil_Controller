@@ -1,0 +1,8 @@
+colorama==0.4.1
+keyboard==0.13.2
+mouse==0.7.0
+Pillow==5.4.1
+PySide2==5.12.2
+pywin32==224
+shiboken2==5.12.2
+termcolor==1.1.0

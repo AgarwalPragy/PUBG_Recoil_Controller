@@ -5,7 +5,7 @@ import time
 import mouse
 import keyboard
 import termcolor
-
+import recoil_tables
 
 from crosshair.crosshair import Crosshair
 from crosshair.main import reload_crosshair
@@ -21,6 +21,7 @@ class GameState:
     ads_active = False
     screen = Screens.play
     secondary_zoom = Zoom.x1
+    active_recoil_table = None
 
     holding_breath = False
     is_firing = False
@@ -38,6 +39,7 @@ class GameState:
         GameState.is_firing = False
 
         GameState.fire_start_time = None
+        GameState.active_recoil_table = recoil_tables.m416
 
 
 class ScriptState:
@@ -47,14 +49,15 @@ class ScriptState:
     last_mouse_poll_time = None
     last_keyboard_poll_time = None
     crosshair_ = None
+    manual_recoil_multiplier: int = 1
 
     @staticmethod
     def reset():
         ScriptState.active = False
-
         ScriptState.recoil_index = 0
         ScriptState.last_mouse_poll_time = 0
         ScriptState.last_keyboard_poll_time = 0
+        ScriptState.manual_recoil_multiplier = 1
 
 
 def update_ui():
@@ -64,13 +67,15 @@ def update_ui():
     ads    = [termcolor.colored('⚪', 'green'), termcolor.colored('⯐', 'red')][GameState.ads_active]
     screen = [termcolor.colored('🌍', 'red'), termcolor.colored('📖', 'red'), termcolor.colored('🎮', 'green')][GameState.screen.value]
     zoom2  =  termcolor.colored(f'{GameState.secondary_zoom.name[1:]}x', ['green', 'blue', 'red', 'red', 'red'][GameState.secondary_zoom.value])
+    gun = termcolor.colored('m416' if GameState.active_recoil_table is recoil_tables.m416 else 'akm', 'green')
+    manual_recoil = termcolor.colored(f'{ScriptState.manual_recoil_multiplier:.1f}', 'green' if ScriptState.manual_recoil_multiplier == 1 else 'red')
     breath = [termcolor.colored('👃', 'green'), termcolor.colored('👽', 'red')][GameState.holding_breath]
     firing = [termcolor.colored('😶', 'green'), termcolor.colored('⚡', 'red')][GameState.is_firing]
     recoil_index = str(ScriptState.recoil_index).zfill(3)
     sep_start = termcolor.colored('[', 'magenta')
     sep_end = termcolor.colored(']', 'magenta')
     sep_mid = termcolor.colored('] [', 'magenta')
-    info = [sep_start, script, sep_mid, weapon, zoom2, ads, sep_mid, screen, firing, breath, recoil_index, sep_end]
+    info = [sep_start, script, sep_mid, weapon, zoom2, ads, sep_mid, gun, manual_recoil, sep_mid, screen, firing, breath, recoil_index, sep_end]
     if info != last_info:
         sys.stdout.write('\r' + '  '.join(map(str, info)))
         sys.stdout.flush()
@@ -120,13 +125,13 @@ def main_loop():
                 zoom = GameState.secondary_zoom if GameState.active_weapon == Weapons.secondary and GameState.ads_active else Zoom.x1
                 if zoom == Zoom.x1 and GameState.holding_breath and GameState.ads_active:
                     zoom = Zoom.xx
-                amount = config.recoil_table[ScriptState.recoil_index]
-                amount = int(amount * config.recoil_multipliers[zoom])
+                amount = GameState.active_recoil_table[ScriptState.recoil_index]
+                amount = int(amount * config.zoom_recoil_multipliers[zoom] * ScriptState.manual_recoil_multiplier)
                 if GameState.active_weapon == Weapons.secondary:
                     amount = int(amount * 0.8)
                 utils.in_game_mouse_move(amount)
                 ScriptState.recoil_index = ScriptState.recoil_index + 1
-                if ScriptState.recoil_index == len(config.recoil_table):
+                if ScriptState.recoil_index == len(GameState.active_recoil_table):
                     ScriptState.recoil_index = 0
                     mouse.release('left')
                     GameState.fire_start_time = None
@@ -213,6 +218,22 @@ def disable_crosshair() -> None:
     ScriptState.crosshair_.allow_draw = False
 
 
+def set_m416():
+    GameState.active_recoil_table = recoil_tables.m416
+
+
+def set_akm():
+    GameState.active_recoil_table = recoil_tables.akm
+
+
+def increase_recoil():
+    ScriptState.manual_recoil_multiplier += 0.2
+
+
+def decrease_recoil():
+    ScriptState.manual_recoil_multiplier -= 0.2
+
+
 if __name__ == '__main__':
     last_info = None
 
@@ -235,6 +256,13 @@ if __name__ == '__main__':
     keyboard.on_press_key(config.Keys.throwables, lambda _: set_weapon_other())
     keyboard.on_press_key(config.Keys.unarm, lambda _: set_weapon_other())
     keyboard.on_press_key(config.Keys.meelee, lambda _: set_weapon_other())
+
+    keyboard.on_press_key(config.HotKeys.m416, lambda _: set_m416())
+    keyboard.on_press_key(config.HotKeys.akm, lambda _: set_akm())
+
+    keyboard.on_press_key(config.HotKeys.recoil_increase, lambda _: increase_recoil())
+    keyboard.on_press_key(config.HotKeys.recoil_decrease, lambda _: decrease_recoil())
+
 
     keyboard.on_press_key(config.Keys.reload, lambda _: cancel_ads())
     keyboard.on_press_key(config.Keys.use, lambda _: keyboard.press_and_release(config.Keys.use_redirect))

@@ -1,74 +1,40 @@
 from enum import IntEnum
 from enums import *
 
-__all__ = ['mouse_poll_time', 'time_between_mouse_move', 'recoil_table', 'recoil_multipliers', 'Keys', 'HotKeys']
+__all__ = ['mouse_poll_time', 'time_between_mouse_move', 'zoom_recoil_multipliers', 'Keys', 'HotKeys']
+
+# =========================================
+# toggles
+# =========================================
 
 debug = False
-
 enabled_anti_recoil = True
-
 enabled_limit_fire_time = False
-max_fire_time = 1
 
+# =========================================
+# timings
+# =========================================
+
+max_fire_time = 1
 main_loop_sleep_time = 0.01
 mouse_poll_time = 0.01
 time_between_mouse_move = 0.02
 keyboard_poll_time = 0.05
 burst_time = 0.3
 
+# =========================================
+# output
+# =========================================
+
 max_info_lines = 3
 
-recoil_table = [  # optimized for m416
-    6, 6, 6, 6, 4,
-    3, 3, 3, 4, 4,
-    3, 3, 3, 4, 4,
-    3, 3, 4, 4, 4,
-    4, 4, 4, 5, 5,
-    5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5,  # 07 bullets
 
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,  # 14 bullets
+# =========================================
+# recoil
+# =========================================
 
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,  # 21 bullets
-
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,
-    5, 5, 5, 6, 6,  # 28 bullets
-
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,  # 35 bullets
-
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,
-    5, 5, 5, 5, 6,  # 40 bullets
-
-]
-
-recoil_multipliers = {
-    Zoom.x1: 1.35,
+zoom_recoil_multipliers = {
+    Zoom.x1: 1,
     Zoom.x2: 1.8,
     Zoom.x3: 2.65,
     Zoom.x4: 3.6,
@@ -81,6 +47,10 @@ recoil_multipliers = {
     #  currently, the initial high recoil control
     #  pulls the mouse down too much while tapping.
 }
+
+# =========================================
+# Bindings
+# =========================================
 
 
 class Keys(IntEnum):
@@ -117,8 +87,17 @@ class HotKeys(IntEnum):
     zoom_4x          = 62  # F4
     zoom_6x          = 64  # F6
 
+    m416             = 100  # F13
+    akm              = 101  # F14
+    recoil_increase  = 104  # F17
+    recoil_decrease  = 105  # F18
+
     toggle_script    = 41  # `
     reset_state      = 1   # esc
+
+# =========================================
+# others
+# =========================================
 
 
 game_window_text = "PLAYERUNKNOWN'S BATTLEGROUNDS "

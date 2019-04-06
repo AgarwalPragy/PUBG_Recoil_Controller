@@ -17,6 +17,7 @@ from crosshair.main import reload_crosshair
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
 # todo: Add logic for quick tapping. Currently, the initial high recoil control. Pulls the mouse down too much while tapping.
 # todo: Convert polls into hooks so that the WheelEvent can be listened to (jumping/vaulting cancels ads)
+# todo: Treat hip-fire as a recoil multiplier
 
 
 class GameState:
@@ -34,8 +35,8 @@ class GameState:
     @staticmethod
     def reset():
         GameState.active_weapon = WeaponSlots.other
-        GameState.primary_gun = Guns.vector
-        GameState.secondary_gun = Guns.m416
+        GameState.primary_gun = Guns.bizon
+        GameState.secondary_gun = Guns.sniper
         GameState.primary_zoom = Zooms.x1
         GameState.secondary_zoom = Zooms.x1
         GameState.screen = Screens.play

@@ -73,11 +73,11 @@ HotKeys.reset_state       =   1  # esc
 #  Zooms
 
 Zooms.x1.recoil_multiplier = 1.0
-Zooms.x2.recoil_multiplier = 1.8
-Zooms.x3.recoil_multiplier = 2.65
-Zooms.x4.recoil_multiplier = 3.6
-Zooms.x6.recoil_multiplier = 5.2
-Zooms.xx.recoil_multiplier = 1.4
+Zooms.x2.recoil_multiplier = 1.9
+Zooms.x3.recoil_multiplier = 2.85
+Zooms.x4.recoil_multiplier = 3.95
+Zooms.x6.recoil_multiplier = 5.55
+Zooms.xx.recoil_multiplier = 1.3
 
 
 # =============================================================================================
@@ -207,6 +207,31 @@ Guns.vector = Gun(
         0, 1, 0, 1, 0,
         1, 0, 1, 0, 1,
         1, 0, 1,
+    ],
+)
+
+Guns.g36c = Gun(
+    name='g36c',
+    time_between_shots=0.102,
+    vertical_recoil=[
+        17, 17, 17, 20, 20,
+        29, 29, 31, 31, 31,
+        31, 31, 31, 31, 31,
+        31, 31, 31, 31, 31,
+        31, 33, 33, 33, 33,
+        33, 33, 33, 31, 31,
+        31, 31, 31, 31, 31,
+        31, 31, 31, 31, 31,
+    ],
+    horizontal_recoil=[
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
     ],
 )
 

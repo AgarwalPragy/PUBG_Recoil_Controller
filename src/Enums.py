@@ -66,3 +66,4 @@ class Guns:
     bizon: Gun
     vector: Gun
     sniper: Gun
+    g36c: Gun

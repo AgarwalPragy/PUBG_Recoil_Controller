@@ -77,8 +77,8 @@ class Gun:
         time_since_last_bullet = time_since_fire_start - (bullets_fired - 1) * self.time_between_shots
         x_expected = self._cumulative_horizontal[bullets_fired-1] + self.horizontal_recoil[bullets_fired] * time_since_last_bullet / self.time_between_shots
         y_expected = self._cumulative_vertical[bullets_fired-1] + self.vertical_recoil[bullets_fired] * time_since_last_bullet / self.time_between_shots
-        dx = multiplier * (x_expected - x_moved)
-        dy = multiplier * (y_expected - y_moved)
+        dx = multiplier * x_expected - x_moved
+        dy = multiplier * y_expected - y_moved
         return int(dx), int(dy)
 
     def get_bullets_fired(self, time_since_fire_start: float) -> int:

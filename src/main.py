@@ -14,7 +14,6 @@ from Enums import *
 from crosshair.main import reload_crosshair
 
 
-# todo: Add crosshair helper when not in ADS
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
 # todo: Add logic for quick tapping. Currently, the initial high recoil control. Pulls the mouse down too much while tapping.
 # todo: Convert polls into hooks so that the WheelEvent can be listened to (jumping/vaulting cancels ads)
@@ -35,8 +34,8 @@ class GameState:
     @staticmethod
     def reset():
         GameState.active_weapon = WeaponSlots.other
-        GameState.primary_gun = Guns.bizon
-        GameState.secondary_gun = Guns.uzi
+        GameState.primary_gun = Guns.vector
+        GameState.secondary_gun = Guns.m416
         GameState.primary_zoom = Zooms.x1
         GameState.secondary_zoom = Zooms.x1
         GameState.screen = Screens.play
@@ -72,8 +71,8 @@ def update_ui():
     firing = [termcolor.colored('😶', 'green'), termcolor.colored('⚡', 'red')][GameState.is_firing]
     zoom1  =  termcolor.colored(GameState.primary_zoom.name, ['red', 'green'][GameState.primary_zoom.is_default])
     zoom2  =  termcolor.colored(GameState.secondary_zoom.name, ['red', 'green'][GameState.secondary_zoom.is_default])
-    gun1 = termcolor.colored(GameState.primary_gun.name.ljust(5), 'blue')
-    gun2 = termcolor.colored(GameState.secondary_gun.name.ljust(5), 'blue')
+    gun1 = termcolor.colored(GameState.primary_gun.name.ljust(6), 'blue')
+    gun2 = termcolor.colored(GameState.secondary_gun.name.ljust(6), 'blue')
     info = [[script], [weapon, ads], [gun1, zoom1], [gun2, zoom2], [screen, firing, breath]]
     if info != last_info:
         sep_beg = termcolor.colored('[', 'magenta')
@@ -133,8 +132,9 @@ def main_loop():
             dx, dy = gun.get_mouse_move_amount(time_since_fire_start=dt, x_moved=x_moved, y_moved=y_moved, multiplier=multiplier)
 
             if config.enabled_anti_recoil and dt >= config.time_between_mouse_move:
-                utils.in_game_mouse_move(dx, dy)
-                ScriptState.recoil_compensated = x_moved + dx, y_moved + dy
+                if dx != 0 or dy > 0:
+                    utils.in_game_mouse_move(dx, dy)
+                    ScriptState.recoil_compensated = x_moved + dx, y_moved + dy
 
             if gun.get_bullets_fired(dt) == min(config.bullet_limit, len(gun.vertical_recoil)):
                 mouse.release('left')

@@ -61,10 +61,10 @@ HotKeys.zoom_3x           =  61  # F3
 HotKeys.zoom_4x           =  62  # F4
 HotKeys.zoom_6x           =  64  # F6
 
-HotKeys.m416              = 100  # F13
-HotKeys.akm               = 101  # F14
-HotKeys.recoil_increase   = 104  # F17
-HotKeys.recoil_decrease   = 105  # F18
+HotKeys.m416              = 104  # F17
+HotKeys.akm               = 105  # F18
+HotKeys.recoil_increase   = 100  # F13
+HotKeys.recoil_decrease   = 101  # F14
 
 HotKeys.toggle_script     =  41  # `
 HotKeys.reset_state       =   1  # esc
@@ -187,6 +187,36 @@ Guns.bizon = Gun(
     ],
 )
 
+Guns.vector = Gun(
+    name='vector',
+    time_between_shots=0.068,
+    vertical_recoil=[
+        10, 10, 13, 16, 16,
+        18, 22, 23, 23, 23,
+        24, 24, 24, 25, 25,
+        25, 25, 25, 26, 26,
+        26, 26, 26, 28, 28,
+        28, 28, 30, 30, 30,
+        32, 32, 32,
+    ],
+    horizontal_recoil=[
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1,
+        0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1,
+        1, 0, 1,
+    ],
+)
+
+Guns.sniper = Gun(
+    name='sniper',
+    time_between_shots=1,
+    vertical_recoil=[0]*100,
+    horizontal_recoil=[0]*100,
+)
+
 guns_sorted_by_recoil = sorted([gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)], key=lambda x: x.recoil_per_second)
 
-bullet_limit = 23
+bullet_limit = 53

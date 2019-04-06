@@ -64,3 +64,5 @@ class Guns:
     akm: Gun
     uzi: Gun
     bizon: Gun
+    vector: Gun
+    sniper: Gun

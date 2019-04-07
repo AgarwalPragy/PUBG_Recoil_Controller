@@ -18,6 +18,9 @@ from crosshair.main import reload_crosshair
 # todo: Add logic for quick tapping. Currently, the initial high recoil control. Pulls the mouse down too much while tapping.
 # todo: Convert polls into hooks so that the WheelEvent can be listened to (jumping/vaulting cancels ads)
 # todo: Treat hip-fire as a recoil multiplier
+# todo: Treat crouch and prone as a recoil multipliers
+# todo: add auto gun, croch/prone detection
+# todo: check if xx and zooms work differently for different guns (if yes, each gund will need a separate modifirer per zoom)
 
 
 class GameState:
@@ -35,7 +38,7 @@ class GameState:
     @staticmethod
     def reset():
         GameState.active_weapon = WeaponSlots.other
-        GameState.primary_gun = Guns.bizon
+        GameState.primary_gun = Guns.ump45
         GameState.secondary_gun = Guns.sniper
         GameState.primary_zoom = Zooms.x1
         GameState.secondary_zoom = Zooms.x1

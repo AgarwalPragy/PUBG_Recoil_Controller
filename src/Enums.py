@@ -67,3 +67,5 @@ class Guns:
     vector: Gun
     sniper: Gun
     g36c: Gun
+    ump45: Gun
+

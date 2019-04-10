@@ -12,6 +12,7 @@ import utils
 from Entitites import *
 from Enums import *
 from crosshair.main import reload_crosshair
+import d3dshot
 
 
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
@@ -56,6 +57,7 @@ class ScriptState:
     last_mouse_poll_time: float
     last_keyboard_poll_time: float
     crosshair_: T.Any
+    last_screenshot_time: float
 
     @staticmethod
     def reset():
@@ -63,6 +65,24 @@ class ScriptState:
         ScriptState.recoil_compensated = 0, 0
         ScriptState.last_mouse_poll_time = 0
         ScriptState.last_keyboard_poll_time = 0
+        ScriptState.last_screenshot_time = 0
+
+
+def screenshot(ts: float):
+    if ts - ScriptState.last_screenshot_time < config.time_between_screenshots:
+        return
+    ScriptState.last_screenshot_time = ts
+    ts_nano = time.perf_counter_ns()
+    screen_snapper.screenshot_to_disk(
+        directory='images/uncategorized',
+        file_name=f'secondary_{ts_nano}.png',
+        region=(1442, 949, 1596, 993),
+    )
+    screen_snapper.screenshot_to_disk(
+        directory='images/uncategorized',
+        file_name=f'primary_{ts_nano}.png',
+        region=(1442, 1008, 1596, 1052),
+    )
 
 
 def update_ui():
@@ -118,6 +138,7 @@ def main_loop():
         ts = time.perf_counter()
         poll_keyboard(ts)
         poll_mouse(ts)
+        screenshot(ts)
 
         update_ui()
 
@@ -294,6 +315,8 @@ if __name__ == '__main__':
 
 
     reset_state()
+
+    screen_snapper = d3dshot.create()
 
     thread = threading.Thread(target=main_loop())
     thread.start()

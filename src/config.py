@@ -14,6 +14,7 @@ __all__ = [
 debug: bool = False
 enabled_anti_recoil: bool = True
 enabled_crosshair: bool = False
+enabled_screenshot: bool = True
 
 # =============================================================================================
 #  Timings
@@ -22,6 +23,7 @@ main_loop_sleep_time: float = 0.01
 mouse_poll_time: float = 0.01
 keyboard_poll_time: float = 0.05
 time_between_mouse_move: float = 0.01
+time_between_screenshots: float = 1.0
 
 # =============================================================================================
 #  Others

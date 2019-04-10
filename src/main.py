@@ -19,8 +19,8 @@ from crosshair.main import reload_crosshair
 # todo: Convert polls into hooks so that the WheelEvent can be listened to (jumping/vaulting cancels ads)
 # todo: Treat hip-fire as a recoil multiplier
 # todo: Treat crouch and prone as a recoil multipliers
-# todo: add auto gun, croch/prone detection
-# todo: check if xx and zooms work differently for different guns (if yes, each gund will need a separate modifirer per zoom)
+# todo: add auto gun, crouch/prone detection
+# todo: check if xx and zooms work differently for different guns (if yes, each gun will need a separate modifier per zoom)
 
 
 class GameState:

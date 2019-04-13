@@ -12,7 +12,7 @@ import utils
 from Entitites import *
 from Enums import *
 from crosshair.main import reload_crosshair
-from gun_detector import grab_and_save
+import gun_detector
 
 
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
@@ -72,9 +72,15 @@ def screenshot(ts: float):
     if ts - ScriptState.last_screenshot_time < config.time_between_screenshots:
         return
     ScriptState.last_screenshot_time = ts
-    ts_nano = time.perf_counter_ns()
-    grab_and_save(label='secondary', ts_nano=ts_nano, region=(1442, 949, 1596, 993))
-    grab_and_save(label='primary', ts_nano=ts_nano, region=(1442, 1008, 1596, 1052))
+
+    if config.enabled_save_screenshot:
+        ts_nano = time.perf_counter_ns()
+        gun_detector.grab_and_save(label='secondary', ts_nano=ts_nano, region=config.secondary_slot_region)
+        gun_detector.grab_and_save(label='primary', ts_nano=ts_nano, region=config.primary_slot_region)
+    if config.enabled_gun_detection:
+        GameState.primary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.primary_slot_region)]
+        GameState.secondary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.secondary_slot_region)]
+
 
 
 def update_ui():
@@ -242,14 +248,6 @@ def disable_crosshair() -> None:
         ScriptState.crosshair_.allow_draw = False
 
 
-def set_m416():
-    GameState.primary_gun = Guns.m416
-
-
-def set_akm():
-    GameState.primary_gun = Guns.akm
-
-
 def cycle_gun(gun: Gun, direction: int) -> Gun:
     index = config.guns_sorted_by_recoil.index(gun)
     index = (index + direction) % len(config.guns_sorted_by_recoil)
@@ -294,9 +292,6 @@ if __name__ == '__main__':
     keyboard.on_press_key(config.GameKeys.throwables, lambda _: set_weapon_other())
     keyboard.on_press_key(config.GameKeys.unarm, lambda _: set_weapon_other())
     keyboard.on_press_key(config.GameKeys.melee, lambda _: set_weapon_other())
-
-    keyboard.on_press_key(config.HotKeys.m416, lambda _: set_m416())
-    keyboard.on_press_key(config.HotKeys.akm, lambda _: set_akm())
 
     keyboard.on_press_key(config.HotKeys.recoil_increase, lambda _: increase_recoil())
     keyboard.on_press_key(config.HotKeys.recoil_decrease, lambda _: decrease_recoil())

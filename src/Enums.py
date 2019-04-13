@@ -55,8 +55,6 @@ class HotKeys:
     zoom_3x: int
     zoom_4x: int
     zoom_6x: int
-    m416: int
-    akm: int
 
 
 class Guns:
@@ -69,3 +67,31 @@ class Guns:
     g36c: Gun
     ump45: Gun
 
+    apple: Gun
+    aug: Gun
+    awm: Gun
+    beryl: Gun
+    crossbow: Gun
+    dp28: Gun
+    groza: Gun
+    hegrenade: Gun
+    kar98k: Gun
+    m16a4: Gun
+    m24: Gun
+    m249: Gun
+    mini14: Gun
+    mk14: Gun
+    molotov: Gun
+    mp5k: Gun
+    mutant: Gun
+    qbu: Gun
+    qbz: Gun
+    s12k: Gun
+    s686: Gun
+    s1897: Gun
+    scarl: Gun
+    skorpion: Gun
+    sks: Gun
+    slr: Gun
+    tommy: Gun
+    vss: Gun

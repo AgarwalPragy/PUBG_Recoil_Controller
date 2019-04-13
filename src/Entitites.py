@@ -42,6 +42,15 @@ class Gun:
         self._horizontal_recoil = horizontal_recoil
         self._rebuild_recoil_tables()
 
+    @staticmethod
+    def copy_from(gun: 'Gun', new_name: str) -> 'Gun':
+        return Gun(
+            name=new_name,
+            time_between_shots=gun.time_between_shots,
+            vertical_recoil=gun.vertical_recoil,
+            horizontal_recoil=gun.horizontal_recoil,
+        )
+
     @property
     def recoil_per_second(self):
         recoil_per_bullet = sum(self.vertical_recoil) / len(self.vertical_recoil)

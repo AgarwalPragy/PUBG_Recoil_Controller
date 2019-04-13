@@ -16,7 +16,14 @@ gun_edge_templates: T.Dict[str, Image] = {}
 guns: T.List[str] = []
 
 
-def grab_and_save(label, ts_nano, region):
+def grab_and_detect(region: T.Tuple[int, int, int, int]) -> str:
+    image = screen_snapper.screenshot(region=region)
+    gun = detect_gun(image.convert('L'))
+    return gun
+
+
+
+def grab_and_save(label: str, ts_nano: int, region: T.Tuple[int, int, int, int]) -> None:
     image = screen_snapper.screenshot(region=region)
     gun = detect_gun(image.convert('L'))
     directory = f'images/uncategorized/{gun}/'
@@ -52,17 +59,17 @@ def edge_detect(image: Image) -> Image:
     return edge
 
 
-def diff(a, b):
+def diff(a: Image, b: Image) -> Image:
     a = np.array(a, dtype=np.float)
     b = np.array(b, dtype=np.float)
     return PIL.Image.fromarray(np.array(np.abs(a-b), dtype=np.uint8), mode='L')
 
 
-def cosine_similarity(a, b):
+def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 
-def similarity(edge, edge_template):
+def similarity(edge: Image, edge_template: Image) -> float:
     edge = np.array(edge, dtype=np.float).flatten()
     edge_template = np.array(edge_template, dtype=np.float).flatten()
     return cosine_similarity(edge, edge_template)

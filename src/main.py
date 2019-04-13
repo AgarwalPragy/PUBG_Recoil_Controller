@@ -12,7 +12,7 @@ import utils
 from Entitites import *
 from Enums import *
 from crosshair.main import reload_crosshair
-import d3dshot
+from gun_detector import grab_and_save
 
 
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
@@ -73,16 +73,8 @@ def screenshot(ts: float):
         return
     ScriptState.last_screenshot_time = ts
     ts_nano = time.perf_counter_ns()
-    screen_snapper.screenshot_to_disk(
-        directory='images/uncategorized',
-        file_name=f'secondary_{ts_nano}.png',
-        region=(1442, 949, 1596, 993),
-    )
-    screen_snapper.screenshot_to_disk(
-        directory='images/uncategorized',
-        file_name=f'primary_{ts_nano}.png',
-        region=(1442, 1008, 1596, 1052),
-    )
+    grab_and_save(label='secondary', ts_nano=ts_nano, region=(1442, 949, 1596, 993))
+    grab_and_save(label='primary', ts_nano=ts_nano, region=(1442, 1008, 1596, 1052))
 
 
 def update_ui():
@@ -315,8 +307,6 @@ if __name__ == '__main__':
 
 
     reset_state()
-
-    screen_snapper = d3dshot.create()
 
     thread = threading.Thread(target=main_loop())
     thread.start()

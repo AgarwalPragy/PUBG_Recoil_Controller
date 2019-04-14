@@ -48,8 +48,12 @@ def edge_detect(image: Image) -> Image:
     arr[:, 0] = 0
     arr[-1, :] = 0
     arr[:, -1] = 0
+    if np.all(arr == 0):
+        return image
     threshold = np.mean(arr[arr > 0])
     arr[arr <= int(threshold)] = 0
+    if np.all(arr == 0):
+        return image
     threshold = np.mean(arr[arr > 0])
     arr[arr < int(threshold)] = 0
     arr[arr >= int(threshold)] = 255
@@ -66,7 +70,11 @@ def diff(a: Image, b: Image) -> Image:
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+    len_a = np.linalg.norm(a)
+    len_b = np.linalg.norm(b)
+    if len_a == 0 or len_b == 0:
+        return 0
+    return np.dot(a, b) / (len_a * len_b)
 
 
 def similarity(edge: Image, edge_template: Image) -> float:

@@ -13,8 +13,8 @@ __all__ = [
 
 debug: bool = False
 enabled_anti_recoil: bool = True
-enabled_crosshair: bool = False
-enabled_save_screenshot: bool = True
+enabled_crosshair: bool = True
+enabled_save_screenshot: bool = False
 enabled_gun_detection: bool = True
 
 # =============================================================================================

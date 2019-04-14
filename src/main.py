@@ -12,6 +12,7 @@ import utils
 from Entitites import *
 from Enums import *
 from crosshair.main import reload_crosshair
+from collections import Counter
 import gun_detector
 
 
@@ -56,8 +57,10 @@ class ScriptState:
     recoil_compensated: T.Tuple[int, int]
     last_mouse_poll_time: float
     last_keyboard_poll_time: float
-    crosshair_: T.Any
     last_screenshot_time: float
+    primary_gun_votes: T.Counter[Gun]
+    secondary_gun_votes: T.Counter[Gun]
+    crosshair_: T.Any = None
 
     @staticmethod
     def reset():
@@ -66,11 +69,16 @@ class ScriptState:
         ScriptState.last_mouse_poll_time = 0
         ScriptState.last_keyboard_poll_time = 0
         ScriptState.last_screenshot_time = 0
+        ScriptState.primary_gun_votes = Counter()
+        ScriptState.secondary_gun_votes = Counter()
 
 
-def screenshot(ts: float):
-    if ts - ScriptState.last_screenshot_time < config.time_between_screenshots:
+def screenshot(ts: float, force_update=False):
+    if not force_update and ts - ScriptState.last_screenshot_time < config.time_between_screenshots:
         return
+    if GameState.screen != Screens.play:
+        return
+
     ScriptState.last_screenshot_time = ts
 
     if config.enabled_save_screenshot:
@@ -78,8 +86,19 @@ def screenshot(ts: float):
         gun_detector.grab_and_save(label='secondary', ts_nano=ts_nano, region=config.secondary_slot_region)
         gun_detector.grab_and_save(label='primary', ts_nano=ts_nano, region=config.primary_slot_region)
     if config.enabled_gun_detection:
-        GameState.primary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.primary_slot_region)]
-        GameState.secondary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.secondary_slot_region)]
+        if force_update:
+            primary_gun = ScriptState.primary_gun_votes.most_common()[0][0]
+            secondary_gun = ScriptState.secondary_gun_votes.most_common()[0][0]
+            ScriptState.primary_gun_votes.clear()
+            ScriptState.secondary_gun_votes.clear()
+            ScriptState.primary_gun_votes[primary_gun] = 1
+            ScriptState.secondary_gun_votes[secondary_gun] = 1
+        primary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.primary_slot_region)]
+        secondary_gun = config.gun_name_to_gun[gun_detector.grab_and_detect(region=config.secondary_slot_region)]
+        ScriptState.primary_gun_votes[primary_gun] += 1
+        ScriptState.secondary_gun_votes[secondary_gun] += 1
+        GameState.primary_gun = ScriptState.primary_gun_votes.most_common()[0][0]
+        GameState.secondary_gun = ScriptState.secondary_gun_votes.most_common()[0][0]
 
 
 
@@ -191,6 +210,7 @@ def toggle_inventory():
     if utils.is_game_in_foreground() or config.debug:
         if GameState.screen == Screens.inventory:
             GameState.screen = Screens.play
+            screenshot(time.perf_counter(), force_update=True)
         else:
             GameState.screen = Screens.inventory
 
@@ -270,6 +290,11 @@ def decrease_recoil():
             GameState.secondary_gun = cycle_gun(GameState.secondary_gun, -1)
 
 
+def interact_pressed():
+    keyboard.press_and_release(config.GameKeys.use_redirect)
+    screenshot(time.perf_counter(), force_update=True)
+
+
 if __name__ == '__main__':
     last_info = None
 
@@ -298,7 +323,7 @@ if __name__ == '__main__':
 
 
     keyboard.on_press_key(config.GameKeys.reload, lambda _: cancel_ads())
-    keyboard.on_press_key(config.GameKeys.use, lambda _: keyboard.press_and_release(config.GameKeys.use_redirect))
+    keyboard.on_press_key(config.GameKeys.use, lambda _: interact_pressed())
 
 
     reset_state()

@@ -262,6 +262,36 @@ Guns.ump45 = Gun(
         0, 0, 0, 0, 0,
     ],
 )
+Guns.dp28 = Gun(
+    name='dp28',
+    time_between_shots=0.118,
+    vertical_recoil=[
+        11, 24, 24, 24, 30,
+        35, 37, 40, 42, 45,
+        47, 47, 52, 52, 52,
+        52, 52, 52, 52, 52,
+        52, 52, 53, 53, 53,
+        54, 54, 54, 54, 54,
+        55, 55, 55, 55, 55,
+        56, 56, 56, 56, 56,
+        57, 57, 57, 57, 57,
+        58, 58,
+    ],
+    horizontal_recoil=[
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0,
+    ],
+)
+
+
 
 Guns.sniper = Gun(
     name='sniper',
@@ -295,7 +325,6 @@ Guns.s1897 = Gun.copy_from(Guns.sniper, 's1897')
 
 Guns.aug = Gun.copy_from(Guns.m416, 'aug')
 Guns.beryl = Gun.copy_from(Guns.akm, 'beryl')
-Guns.dp28 = Gun.copy_from(Guns.akm, 'dp28')
 Guns.groza = Gun.copy_from(Guns.akm, 'groza')
 Guns.m249 = Gun.copy_from(Guns.akm, 'm249')
 Guns.mk14 = Gun.copy_from(Guns.akm, 'mk14')
@@ -305,6 +334,10 @@ Guns.scarl = Gun.copy_from(Guns.m416, 'scarl')
 Guns.tommy = Gun.copy_from(Guns.ump45, 'tommy')
 
 
+bullet_limit = 53
+
+
 guns_sorted_by_recoil = sorted([gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)], key=lambda x: x.recoil_per_second)
 gun_name_to_gun = {gun.name: gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)}
-bullet_limit = 53
+for gun in guns_sorted_by_recoil:
+    assert len(gun.horizontal_recoil) == len(gun.vertical_recoil), gun

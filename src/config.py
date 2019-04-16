@@ -21,7 +21,7 @@ enabled_gun_detection: bool = True
 # =============================================================================================
 #  Timings
 
-main_loop_sleep_time: float = 0.01
+main_loop_sleep_time: float = 0.02
 mouse_poll_time: float = 0.01
 keyboard_poll_time: float = 0.05
 time_between_mouse_move: float = 0.01

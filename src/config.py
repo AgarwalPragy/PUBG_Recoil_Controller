@@ -1,3 +1,4 @@
+import typing as T
 from Entitites import *
 from Enums import *
 
@@ -292,6 +293,31 @@ Guns.dp28 = Gun(
 )
 
 
+Guns.beryl = Gun(
+    name='beryl',
+    time_between_shots=0.1,
+    vertical_recoil=[
+        20, 26, 26, 26, 30,
+        42, 42, 42, 45, 47,
+        49, 50, 50, 55, 55,
+        60, 60, 60, 60, 60,
+        62, 62, 62, 63, 64,
+        62, 62, 62, 63, 64,
+        64, 64, 64, 64, 64,
+        64, 64, 64, 64, 64,
+    ],
+    horizontal_recoil=[
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+    ],
+)
+
 
 Guns.sniper = Gun(
     name='sniper',
@@ -324,7 +350,6 @@ Guns.s1897 = Gun.copy_from(Guns.sniper, 's1897')
 
 
 Guns.aug = Gun.copy_from(Guns.m416, 'aug')
-Guns.beryl = Gun.copy_from(Guns.akm, 'beryl')
 Guns.groza = Gun.copy_from(Guns.akm, 'groza')
 Guns.m249 = Gun.copy_from(Guns.akm, 'm249')
 Guns.mk14 = Gun.copy_from(Guns.akm, 'mk14')
@@ -334,10 +359,12 @@ Guns.scarl = Gun.copy_from(Guns.m416, 'scarl')
 Guns.tommy = Gun.copy_from(Guns.ump45, 'tommy')
 
 
-bullet_limit = 53
+bullet_limit: int = 53
 
 
-guns_sorted_by_recoil = sorted([gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)], key=lambda x: x.recoil_per_second)
-gun_name_to_gun = {gun.name: gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)}
+guns_sorted_by_recoil: T.List[Gun] = sorted([gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)], key=lambda x: x.recoil_per_second)
+gun_name_to_gun: T.Dict[str, Gun] = {gun.name: gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)}
 for gun in guns_sorted_by_recoil:
     assert len(gun.horizontal_recoil) == len(gun.vertical_recoil), gun
+
+

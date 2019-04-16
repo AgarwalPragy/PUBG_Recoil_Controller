@@ -28,6 +28,7 @@ class Zoom:
 
 
 class Gun:
+    safe: bool = True
     name: str
     time_between_shots: float
     _vertical_recoil: T.List[int]
@@ -44,12 +45,14 @@ class Gun:
 
     @staticmethod
     def copy_from(gun: 'Gun', new_name: str) -> 'Gun':
-        return Gun(
+        gun = Gun(
             name=new_name,
             time_between_shots=gun.time_between_shots,
             vertical_recoil=gun.vertical_recoil,
             horizontal_recoil=gun.horizontal_recoil,
         )
+        gun.safe = False
+        return gun
 
     @property
     def recoil_per_second(self):

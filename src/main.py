@@ -112,8 +112,8 @@ def update_ui():
     firing = [termcolor.colored('😶', 'green'), termcolor.colored('⚡', 'red')][GameState.is_firing]
     zoom1  =  termcolor.colored(GameState.primary_zoom.name, ['red', 'green'][GameState.primary_zoom.is_default])
     zoom2  =  termcolor.colored(GameState.secondary_zoom.name, ['red', 'green'][GameState.secondary_zoom.is_default])
-    gun1 = termcolor.colored(GameState.primary_gun.name.ljust(6), 'blue')
-    gun2 = termcolor.colored(GameState.secondary_gun.name.ljust(6), 'blue')
+    gun1 = termcolor.colored(GameState.primary_gun.name.ljust(6), 'blue' if GameState.primary_gun.safe else'red')
+    gun2 = termcolor.colored(GameState.secondary_gun.name.ljust(6), 'blue' if GameState.secondary_gun.safe else'red')
     info = [[script], [weapon, ads], [gun1, zoom1], [gun2, zoom2], [screen, firing, breath]]
     if info != last_info:
         sep_beg = termcolor.colored('[', 'magenta')

@@ -1,6 +1,7 @@
 import typing as T
 from Entitites import *
 from Enums import *
+import config_guns
 
 __all__ = [
     'debug', 'enabled_anti_recoil', 'enabled_crosshair',
@@ -28,14 +29,6 @@ time_between_mouse_move: float = 0.01
 time_between_screenshots: float = 1.0
 
 # =============================================================================================
-#  Others
-
-game_window_text: str = "PLAYERUNKNOWN'S BATTLEGROUNDS "
-max_info_lines: int = 3
-secondary_slot_region = 1442, 949, 1596, 993
-primary_slot_region = 1442, 1008, 1596, 1052
-
-# =============================================================================================
 #  Bindings
 
 GameKeys.primary_weapon   =   2  # 1
@@ -59,7 +52,7 @@ GameKeys.strafe_right     =  32  # d
 GameKeys.hold_breath      =  42  # left shift
 
 GameKeys.alternate_ads    =  68  # F10
-GameKeys.alternate_fire   =  87  # F11
+GameKeys.fire             =  66  # F8
 
 HotKeys.zoom_1x           =  59  # F1
 HotKeys.zoom_2x           =  60  # F2
@@ -78,295 +71,27 @@ HotKeys.reset_state       =   1  # esc
 # =============================================================================================
 #  Zooms
 
+Zooms.x0.recoil_multiplier = 0.85
 Zooms.x1.recoil_multiplier = 1.0
+Zooms.x1_5.recoil_multiplier = 1.35
 Zooms.x2.recoil_multiplier = 1.8
 Zooms.x3.recoil_multiplier = 2.75
 Zooms.x4.recoil_multiplier = 3.8
 Zooms.x6.recoil_multiplier = 5.5
-Zooms.xx.recoil_multiplier = 1.35
-
 
 # =============================================================================================
 #  Guns
 
-Guns.m416 = Gun(
-    name='m416',
-    time_between_shots=0.102,
-    vertical_recoil=[
-        22, 22, 22, 24, 25,
-        30, 30, 32, 32, 32,
-        32, 32, 32, 32, 32,
-        32, 32, 32, 32, 32,
-        32, 34, 34, 34, 34,
-        34, 34, 34, 32, 32,
-        32, 32, 32, 32, 32,
-        32, 32, 32, 32, 32,
-    ],
-    horizontal_recoil=[
-        0, 0, 1, 1, 1,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-    ],
-)
-
-Guns.akm = Gun(
-    name='akm',
-    time_between_shots=0.1,
-    vertical_recoil=[
-        18, 29, 29, 29, 29,
-        40, 40, 40, 46, 46,
-        46, 46, 50, 50, 50,
-        50, 50, 52, 52, 52,
-        52, 52, 52, 53, 53,
-        53, 53, 53, 53, 53,
-        53, 53, 53, 53, 53,
-        53, 53, 53, 53, 53,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-    ],
-)
-
-Guns.uzi = Gun(
-    name='uzi',
-    time_between_shots=0.051,
-    vertical_recoil=[
-         5,  6, 10, 10, 13,
-        15, 15, 18, 20, 20,
-        23, 23, 23, 23, 23,
-        27, 27, 27, 27, 27,
-        32, 32, 32, 32, 32,
-        32, 32, 32, 32, 32,
-        32, 32, 32, 32, 32
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-    ],
-)
-
-Guns.bizon = Gun(
-    name='bizon',
-    time_between_shots=0.102,
-    vertical_recoil=[
-        10, 10, 15, 18, 18,
-        20, 24, 24, 24, 24,
-        24, 24, 24, 24, 24,
-        24, 24, 24, 24, 24,
-        22, 22, 22, 22, 22,
-        22, 22, 22, 22, 22,
-        22, 22, 22, 22, 22,
-        23, 23, 23, 23, 23,
-        23, 23, 23, 23, 23,
-        23, 23, 23, 23, 23,
-        23, 23, 23,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1,
-    ],
-)
-
-Guns.vector = Gun(
-    name='vector',
-    time_between_shots=0.068,
-    vertical_recoil=[
-        10, 10, 13, 16, 16,
-        18, 22, 23, 23, 23,
-        24, 24, 24, 25, 25,
-        25, 25, 25, 26, 26,
-        26, 26, 26, 28, 28,
-        28, 28, 30, 30, 30,
-        32, 32, 32,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        0, 1, 0, 1, 0,
-        1, 0, 1, 0, 1,
-        1, 0, 1,
-    ],
-)
-
-Guns.g36c = Gun(
-    name='g36c',
-    time_between_shots=0.102,
-    vertical_recoil=[
-        17, 17, 17, 20, 20,
-        29, 29, 31, 31, 31,
-        31, 31, 31, 31, 31,
-        31, 31, 31, 31, 31,
-        31, 33, 33, 33, 33,
-        33, 33, 33, 31, 31,
-        31, 31, 31, 31, 31,
-        31, 31, 31, 31, 31,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-    ],
-)
-
-Guns.ump45 = Gun(
-    name='ump45',
-    time_between_shots=0.102,
-    vertical_recoil=[
-        12, 12, 17, 22, 22,
-        24, 26, 26, 26, 26,
-        26, 26, 27, 28, 28,
-        30, 30, 30, 30, 30,
-        30, 30, 30, 30, 30,
-        30, 30, 30, 30, 30,
-        30, 30, 30, 30, 30,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-    ],
-)
-Guns.dp28 = Gun(
-    name='dp28',
-    time_between_shots=0.118,
-    vertical_recoil=[
-        11, 24, 24, 24, 30,
-        35, 37, 40, 42, 45,
-        47, 47, 52, 52, 52,
-        52, 52, 52, 52, 52,
-        52, 52, 53, 53, 53,
-        54, 54, 54, 54, 54,
-        55, 55, 55, 55, 55,
-        56, 56, 56, 56, 56,
-        57, 57, 57, 57, 57,
-        58, 58,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0,
-    ],
-)
-
-
-Guns.beryl = Gun(
-    name='beryl',
-    time_between_shots=0.1,
-    vertical_recoil=[
-        20, 26, 26, 26, 30,
-        42, 42, 42, 45, 47,
-        49, 50, 50, 55, 55,
-        60, 60, 60, 60, 60,
-        62, 62, 62, 63, 64,
-        62, 62, 62, 63, 64,
-        64, 64, 64, 64, 64,
-        64, 64, 64, 64, 64,
-    ],
-    horizontal_recoil=[
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0,
-    ],
-)
-
-
-Guns.sniper = Gun(
-    name='sniper',
-    time_between_shots=1,
-    vertical_recoil=[0]*100,
-    horizontal_recoil=[0]*100,
-)
-
-Guns.apple = Gun.copy_from(Guns.sniper, 'apple')
-Guns.hegrenade = Gun.copy_from(Guns.sniper, 'hegrenade')
-Guns.molotov = Gun.copy_from(Guns.sniper, 'molotov')
-Guns.skorpion = Gun.copy_from(Guns.sniper, 'skorpion')
-
-Guns.awm = Gun.copy_from(Guns.sniper, 'awm')
-Guns.kar98k = Gun.copy_from(Guns.sniper, 'kar98k')
-Guns.m24 = Gun.copy_from(Guns.sniper, 'm24')
-Guns.crossbow = Gun.copy_from(Guns.sniper, 'crossbow')
-
-Guns.mini14 = Gun.copy_from(Guns.sniper, 'mini14')
-Guns.qbu = Gun.copy_from(Guns.sniper, 'qbu')
-Guns.sks = Gun.copy_from(Guns.sniper, 'sks')
-Guns.slr = Gun.copy_from(Guns.sniper, 'slr')
-Guns.vss = Gun.copy_from(Guns.sniper, 'vss')
-
-Guns.m16a4 = Gun.copy_from(Guns.sniper, 'm16a4')
-Guns.s12k = Gun.copy_from(Guns.sniper, 's12k')
-Guns.mutant = Gun.copy_from(Guns.sniper, 'mutant')
-Guns.s686 = Gun.copy_from(Guns.sniper, 's686')
-Guns.s1897 = Gun.copy_from(Guns.sniper, 's1897')
-
-
-Guns.aug = Gun.copy_from(Guns.m416, 'aug')
-Guns.groza = Gun.copy_from(Guns.akm, 'groza')
-Guns.m249 = Gun.copy_from(Guns.akm, 'm249')
-Guns.mk14 = Gun.copy_from(Guns.akm, 'mk14')
-Guns.mp5k = Gun.copy_from(Guns.ump45, 'mp5k')
-Guns.qbz = Gun.copy_from(Guns.m416, 'qbz')
-Guns.scarl = Gun.copy_from(Guns.m416, 'scarl')
-Guns.tommy = Gun.copy_from(Guns.ump45, 'tommy')
-
-
 bullet_limit: int = 53
-
 
 guns_sorted_by_recoil: T.List[Gun] = sorted([gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)], key=lambda x: x.recoil_per_second)
 gun_name_to_gun: T.Dict[str, Gun] = {gun.name: gun for gun in Guns.__dict__.values() if isinstance(gun, Gun)}
 for gun in guns_sorted_by_recoil:
-    assert len(gun.horizontal_recoil) == len(gun.vertical_recoil), gun
+    assert len(gun.horizontal_recoil) == len(gun.vertical_recoil), gun.name
 
+
+# =============================================================================================
+#  Others
 
 # Brightness / Contrast
 #     Exposure: 0
@@ -383,3 +108,8 @@ for gun in guns_sorted_by_recoil:
 #     Tint Intensity: 0
 #     Temperature: 0
 #     Vibrance: 10
+
+game_window_text: str = "PLAYERUNKNOWN'S BATTLEGROUNDS "
+max_info_lines: int = 3
+secondary_slot_region = 1442, 949, 1596, 993
+primary_slot_region = 1442, 1008, 1596, 1052

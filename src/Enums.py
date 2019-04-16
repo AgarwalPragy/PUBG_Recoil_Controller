@@ -1,6 +1,6 @@
 from Entitites import *
 
-__all__ = ['Screens', 'WeaponSlots', 'Zooms', 'GameKeys', 'HotKeys', 'Guns']
+__all__ = ['Screens', 'WeaponSlots', 'Zooms', 'GameKeys', 'HotKeys', 'Guns', 'GunTypes']
 
 
 class Screens:
@@ -16,17 +16,19 @@ class WeaponSlots:
 
 
 class Zooms:
+    x0 = Zoom('0x', False)
     x1 = Zoom('1×', True)
+    x1_5 = Zoom('1.5x', False)
     x2 = Zoom('2×', False)
     x3 = Zoom('3×', False)
     x4 = Zoom('4×', False)
     x6 = Zoom('6×', False)
-    xx = Zoom('××', False)
+
 
 
 class GameKeys:
     alternate_ads: int
-    alternate_fire: int
+    fire: int
     hold_breath: int
     lean_left: int
     lean_right: int
@@ -55,6 +57,12 @@ class HotKeys:
     zoom_3x: int
     zoom_4x: int
     zoom_6x: int
+
+
+class GunTypes:
+    full_auto = GunType(0)
+    single_fire = GunType(1)
+    bolt_action = GunType(2)
 
 
 class Guns:

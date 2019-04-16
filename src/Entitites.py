@@ -3,7 +3,7 @@ import typing as T
 from dataclasses import dataclass
 from math import floor
 
-__all__ = ['Screen', 'WeaponSlot', 'Zoom', 'Gun']
+__all__ = ['Screen', 'WeaponSlot', 'Zoom', 'GunType', 'Gun']
 
 
 @dataclass(unsafe_hash=True)
@@ -27,17 +27,23 @@ class Zoom:
     recoil_multiplier: float = 1.0
 
 
+class GunType(int):
+    pass
+
+
 class Gun:
     safe: bool = True
     name: str
+    type_: GunType
     time_between_shots: float
     _vertical_recoil: T.List[int]
     _horizontal_recoil: T.List[int]
     _cumulative_vertical: T.List[int]
     _cumulative_horizontal: T.List[int]
 
-    def __init__(self, name: str, time_between_shots: float, vertical_recoil: T.List[int], horizontal_recoil: T.List[int]) -> None:
+    def __init__(self, name: str, type_: GunType, time_between_shots: float, vertical_recoil: T.List[int], horizontal_recoil: T.List[int]) -> None:
         self.name = name
+        self.type_ = type_
         self.time_between_shots = time_between_shots
         self._vertical_recoil = vertical_recoil
         self._horizontal_recoil = horizontal_recoil
@@ -47,6 +53,7 @@ class Gun:
     def copy_from(gun: 'Gun', new_name: str) -> 'Gun':
         gun = Gun(
             name=new_name,
+            type_=gun.type_,
             time_between_shots=gun.time_between_shots,
             vertical_recoil=gun.vertical_recoil,
             horizontal_recoil=gun.horizontal_recoil,

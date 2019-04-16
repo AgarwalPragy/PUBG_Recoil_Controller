@@ -61,6 +61,7 @@ class ScriptState:
     primary_gun_votes: T.Counter[Gun]
     secondary_gun_votes: T.Counter[Gun]
     crosshair_: T.Any = None
+    fire_pressed: bool
 
     @staticmethod
     def reset():
@@ -71,6 +72,7 @@ class ScriptState:
         ScriptState.last_screenshot_time = 0
         ScriptState.primary_gun_votes = Counter()
         ScriptState.secondary_gun_votes = Counter()
+        ScriptState.fire_pressed = False
 
 
 def screenshot(ts: float, force_update=False):
@@ -130,8 +132,7 @@ def poll_mouse(ts):
     ScriptState.last_mouse_poll_time = ts
     GameState.is_firing = (
             mouse.is_pressed('left') and
-            GameState.screen == Screens.play and
-            (GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary])
+            GameState.screen == Screens.play
     )
 
     if GameState.is_firing:
@@ -162,15 +163,27 @@ def main_loop():
         if not ScriptState.active or not utils.is_game_in_foreground():
             continue
 
-        if GameState.is_firing and GameState.fire_start_time is not None and GameState.ads_active:
+        if GameState.is_firing and GameState.fire_start_time is not None and GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary]:
+            gun = {WeaponSlots.primary: GameState.primary_gun, WeaponSlots.secondary: GameState.secondary_gun}[GameState.active_weapon]
+            if gun.type_ == GunTypes.single_fire:
+                keyboard.press_and_release(GameKeys.fire)
+            elif gun.type_ == GunTypes.full_auto and not ScriptState.fire_pressed:
+                keyboard.press(GameKeys.fire)
+                ScriptState.fire_pressed = True
+            elif gun.type_ == GunTypes.bolt_action and not ScriptState.fire_pressed:
+                keyboard.press(GameKeys.fire)
+                ScriptState.fire_pressed = True
+
             ts = time.perf_counter()
             dt = ts - GameState.fire_start_time
             zoom = {WeaponSlots.primary: GameState.primary_zoom, WeaponSlots.secondary: GameState.secondary_zoom}[GameState.active_weapon]
-            gun = {WeaponSlots.primary: GameState.primary_gun, WeaponSlots.secondary: GameState.secondary_gun}[GameState.active_weapon]
             if zoom == Zooms.x1 and GameState.holding_breath and GameState.ads_active:
-                zoom = Zooms.xx
+                zoom = Zooms.x1_5
+            if not GameState.ads_active:
+                zoom = Zooms.x0
             multiplier = zoom.recoil_multiplier
             x_moved, y_moved = ScriptState.recoil_compensated
+
             dx, dy = gun.get_mouse_move_amount(time_since_fire_start=dt, x_moved=x_moved, y_moved=y_moved, multiplier=multiplier)
 
             if config.enabled_anti_recoil and dt >= config.time_between_mouse_move:
@@ -182,7 +195,14 @@ def main_loop():
                 mouse.release('left')
                 GameState.fire_start_time = None
                 ScriptState.recoil_compensated = 0, 0
+        elif GameState.is_firing and GameState.active_weapon == WeaponSlots.other:
+            if not ScriptState.fire_pressed:
+                keyboard.press(GameKeys.fire)
+                ScriptState.fire_pressed = True
         else:
+            if ScriptState.fire_pressed:
+                keyboard.release(GameKeys.fire)
+                ScriptState.fire_pressed = False
             GameState.fire_start_time = None
             ScriptState.recoil_compensated = 0, 0
 
@@ -196,6 +216,7 @@ def reset_state():
     ScriptState.reset()
     GameState.reset()
     cancel_ads()
+    keyboard.release(GameKeys.fire)
 
 
 def set_zoom(value: Zoom):
@@ -227,12 +248,14 @@ def set_weapon_primary():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = WeaponSlots.primary
         cancel_ads()
+        enable_crosshair()
 
 
 def set_weapon_secondary():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = WeaponSlots.secondary
         cancel_ads()
+        enable_crosshair()
 
 
 
@@ -240,6 +263,7 @@ def set_weapon_other():
     if utils.is_game_in_foreground() or config.debug:
         GameState.active_weapon = WeaponSlots.other
         cancel_ads()
+        disable_crosshair()
 
 
 def toggle_ads():
@@ -255,7 +279,8 @@ def toggle_ads():
 def cancel_ads():
     if utils.is_game_in_foreground() or config.debug:
         GameState.ads_active = False
-        enable_crosshair()
+        if GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary]:
+            enable_crosshair()
 
 
 def enable_crosshair() -> None:

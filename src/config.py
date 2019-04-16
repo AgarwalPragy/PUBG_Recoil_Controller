@@ -368,3 +368,18 @@ for gun in guns_sorted_by_recoil:
     assert len(gun.horizontal_recoil) == len(gun.vertical_recoil), gun
 
 
+# Brightness / Contrast
+#     Exposure: 0
+#     Contrast: 50
+#     Highlights: -70
+#     Shadows: -100
+#     Gamma: 20
+# Details
+#     Sharpen: 26
+#     Clarity: 22
+#     HDR Toning: 70
+#     Bloom: 0
+# Colour
+#     Tint Intensity: 0
+#     Temperature: 0
+#     Vibrance: 10

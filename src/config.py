@@ -79,11 +79,11 @@ HotKeys.reset_state       =   1  # esc
 #  Zooms
 
 Zooms.x1.recoil_multiplier = 1.0
-Zooms.x2.recoil_multiplier = 1.9
-Zooms.x3.recoil_multiplier = 2.85
-Zooms.x4.recoil_multiplier = 3.95
-Zooms.x6.recoil_multiplier = 5.55
-Zooms.xx.recoil_multiplier = 1.3
+Zooms.x2.recoil_multiplier = 1.8
+Zooms.x3.recoil_multiplier = 2.75
+Zooms.x4.recoil_multiplier = 3.8
+Zooms.x6.recoil_multiplier = 5.5
+Zooms.xx.recoil_multiplier = 1.35
 
 
 # =============================================================================================

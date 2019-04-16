@@ -98,9 +98,18 @@ Guns.beryl = Gun(
 Guns.m16a4 = Gun(
     name='m16a4',
     type_=GunTypes.single_fire,
-    time_between_shots=1,
-    vertical_recoil=[0]*100,
-    horizontal_recoil=[0]*100,
+    time_between_shots=0.102,
+    vertical_recoil=[
+        16, 22, 22, 26, 30,
+        36, 37, 38, 42, 42,
+        46, 46, 48, 50, 50,
+        50, 50, 50, 50, 50,
+        50, 50, 50, 50, 50,
+        50, 50, 50, 50, 50,
+        50, 50, 50, 50, 50,
+        50, 50, 50, 50, 50,
+    ],
+    horizontal_recoil=[0] * 40,
 )
 
 Guns.mutant = Gun.copy_from(Guns.m16a4, 'mutant')

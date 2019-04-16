@@ -17,12 +17,11 @@ import gun_detector
 
 
 # todo: Detect when out of breath and cancel the effect. Can be done purely on timing with no screen reading
-# todo: Add logic for quick tapping. Currently, the initial high recoil control. Pulls the mouse down too much while tapping.
 # todo: Convert polls into hooks so that the WheelEvent can be listened to (jumping/vaulting cancels ads)
-# todo: Treat hip-fire as a recoil multiplier
 # todo: Treat crouch and prone as a recoil multipliers
-# todo: add auto gun, crouch/prone detection
+# todo: add crouch/prone detection
 # todo: check if xx and zooms work differently for different guns (if yes, each gun will need a separate modifier per zoom)
+# todo: control the click rate according to the guns time_between_shots for single_fire guns
 
 
 class GameState:

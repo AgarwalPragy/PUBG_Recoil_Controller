@@ -203,18 +203,14 @@ Guns.tommy = Gun.copy_from(Guns.ump45, 'tommy')
 Guns.mini14 = Gun.copy_from(Guns.m16a4, 'mini14')
 Guns.qbu = Gun.copy_from(Guns.m16a4, 'qbu')
 Guns.sks = Gun.copy_from(Guns.m16a4, 'sks')
-
-
 Guns.slr = Gun(
     name='slr',
     type_=GunTypes.single_fire,
-    time_between_shots=0.103,
+    time_between_shots=1/4,
     vertical_recoil=[
-        18, 33, 46,  # 58, 64,
-        # 70, 76, 82, 86, 86,
+        17, 19, 25, 27, 29,
     ],
-    horizontal_recoil=[0] * 3,
-    # horizontal_recoil=[0] * 10,
+    horizontal_recoil=[0] * 5,
 )
 
 

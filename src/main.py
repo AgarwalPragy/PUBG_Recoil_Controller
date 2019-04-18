@@ -150,6 +150,24 @@ def poll_keyboard(ts):
     GameState.holding_breath = keyboard.is_pressed(config.GameKeys.hold_breath)
 
 
+def get_active():
+    gun = {
+        WeaponSlots.primary: GameState.primary_gun,
+        WeaponSlots.secondary: GameState.secondary_gun,
+        WeaponSlots.other: None
+    }[GameState.active_weapon]
+    zoom = {
+        WeaponSlots.primary: GameState.primary_zoom,
+        WeaponSlots.secondary: GameState.secondary_zoom,
+        WeaponSlots.other: Zooms.x1
+    }[GameState.active_weapon]
+    if zoom == Zooms.x1 and GameState.holding_breath and GameState.ads_active:
+        zoom = Zooms.x1_5
+    if not GameState.ads_active:
+        zoom = Zooms.x0
+    return gun, zoom
+
+
 def main_loop():
     while True:
         time.sleep(config.main_loop_sleep_time)
@@ -164,11 +182,12 @@ def main_loop():
         if not ScriptState.active or not utils.is_game_in_foreground():
             continue
 
-        if GameState.is_firing and GameState.fire_start_time is not None and GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary]:
-            gun = {WeaponSlots.primary: GameState.primary_gun, WeaponSlots.secondary: GameState.secondary_gun}[GameState.active_weapon]
-            ts = time.perf_counter()
-            dt = ts - GameState.fire_start_time
+        gun, zoom = get_active()
+        multiplier = zoom.recoil_multiplier
+        ts = time.perf_counter()
 
+        if GameState.is_firing and GameState.fire_start_time is not None and GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary]:
+            dt = ts - GameState.fire_start_time
             if gun.type_ == GunTypes.single_fire:
                 if ScriptState.single_fire_bullet_index * gun.time_between_shots < dt:
                     keyboard.press_and_release(GameKeys.fire)
@@ -180,14 +199,7 @@ def main_loop():
                 keyboard.press(GameKeys.fire)
                 ScriptState.fire_pressed = True
 
-            zoom = {WeaponSlots.primary: GameState.primary_zoom, WeaponSlots.secondary: GameState.secondary_zoom}[GameState.active_weapon]
-            if zoom == Zooms.x1 and GameState.holding_breath and GameState.ads_active:
-                zoom = Zooms.x1_5
-            if not GameState.ads_active:
-                zoom = Zooms.x0
-            multiplier = zoom.recoil_multiplier
             x_moved, y_moved = ScriptState.recoil_compensated
-
             dx, dy = gun.get_mouse_move_amount(time_since_fire_start=dt, x_moved=x_moved, y_moved=y_moved, multiplier=multiplier)
 
             if config.enabled_anti_recoil and dt >= config.time_between_mouse_move:
@@ -207,7 +219,8 @@ def main_loop():
             if ScriptState.fire_pressed:
                 keyboard.release(GameKeys.fire)
                 ScriptState.fire_pressed = False
-            GameState.fire_start_time = None
+            if GameState.fire_start_time is not None:
+                GameState.fire_start_time = None
             ScriptState.recoil_compensated = 0, 0
             ScriptState.single_fire_bullet_index = 0
 

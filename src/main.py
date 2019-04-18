@@ -61,10 +61,11 @@ class ScriptState:
     secondary_gun_votes: T.Counter[Gun]
     crosshair_: T.Any = None
     fire_pressed: bool
+    single_fire_bullet_index: int
 
     @staticmethod
     def reset():
-        ScriptState.active = False
+        ScriptState.active = True
         ScriptState.recoil_compensated = 0, 0
         ScriptState.last_mouse_poll_time = 0
         ScriptState.last_keyboard_poll_time = 0
@@ -72,6 +73,7 @@ class ScriptState:
         ScriptState.primary_gun_votes = Counter()
         ScriptState.secondary_gun_votes = Counter()
         ScriptState.fire_pressed = False
+        ScriptState.single_fire_bullet_index = 0
 
 
 def screenshot(ts: float, force_update=False):
@@ -164,8 +166,13 @@ def main_loop():
 
         if GameState.is_firing and GameState.fire_start_time is not None and GameState.active_weapon in [WeaponSlots.primary, WeaponSlots.secondary]:
             gun = {WeaponSlots.primary: GameState.primary_gun, WeaponSlots.secondary: GameState.secondary_gun}[GameState.active_weapon]
+            ts = time.perf_counter()
+            dt = ts - GameState.fire_start_time
+
             if gun.type_ == GunTypes.single_fire:
-                keyboard.press_and_release(GameKeys.fire)
+                if ScriptState.single_fire_bullet_index * gun.time_between_shots < dt:
+                    keyboard.press_and_release(GameKeys.fire)
+                    ScriptState.single_fire_bullet_index += 1
             elif gun.type_ == GunTypes.full_auto and not ScriptState.fire_pressed:
                 keyboard.press(GameKeys.fire)
                 ScriptState.fire_pressed = True
@@ -173,8 +180,6 @@ def main_loop():
                 keyboard.press(GameKeys.fire)
                 ScriptState.fire_pressed = True
 
-            ts = time.perf_counter()
-            dt = ts - GameState.fire_start_time
             zoom = {WeaponSlots.primary: GameState.primary_zoom, WeaponSlots.secondary: GameState.secondary_zoom}[GameState.active_weapon]
             if zoom == Zooms.x1 and GameState.holding_breath and GameState.ads_active:
                 zoom = Zooms.x1_5
@@ -204,6 +209,7 @@ def main_loop():
                 ScriptState.fire_pressed = False
             GameState.fire_start_time = None
             ScriptState.recoil_compensated = 0, 0
+            ScriptState.single_fire_bullet_index = 0
 
 
 def toggle_script():

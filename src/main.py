@@ -139,8 +139,6 @@ def poll_mouse(ts):
     if GameState.is_firing:
         if GameState.fire_start_time is None:
             GameState.fire_start_time = ts
-    else:
-        GameState.fire_start_time = None
 
 
 def poll_keyboard(ts):
@@ -220,6 +218,10 @@ def main_loop():
                 keyboard.release(GameKeys.fire)
                 ScriptState.fire_pressed = False
             if GameState.fire_start_time is not None:
+                if config.enabled_anti_recoil and gun is not None:
+                    last_vertical_recoil = gun.vertical_recoil[ScriptState.single_fire_bullet_index]
+                    readjust_amount = - int(last_vertical_recoil / 0.7)
+                    utils.in_game_mouse_move(0, readjust_amount)
                 GameState.fire_start_time = None
             ScriptState.recoil_compensated = 0, 0
             ScriptState.single_fire_bullet_index = 0
@@ -307,7 +309,7 @@ def enable_crosshair() -> None:
 
 
 def disable_crosshair() -> None:
-    if config.enabled_crosshair:
+    if config.enabled_crosshair and ScriptState.crosshair_ is not None:
         ScriptState.crosshair_.allow_draw = False
 
 
